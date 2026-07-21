@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Pedidos Retirados</title>
+
+    <!-- ===== Configuração do App (PWA) ===== -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Retirada">
+
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --success-color: #16a34a;
+            --error-color: #dc2626;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            outline: none;
+            background-color: #f8fafc;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        button:active {
+            transform: scale(0.99);
+        }
+
+        button:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Botão secundário (Escanear) */
+        .btn-secondary {
+            margin-top: 12px;
+            background-color: #ffffff;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #eff6ff;
+        }
+
+        .btn-secondary:disabled {
+            background-color: #f1f5f9;
+            color: #94a3b8;
+            border-color: var(--border-color);
+        }
+
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .status-msg {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+        }
+
+        .status-msg.success {
+            display: block;
+            background-color: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status-msg.error {
+            display: block;
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #ffffff;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== Leitor de código de barras ===== */
+        .scanner-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(15, 23, 42, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .scanner-overlay.active {
+            display: flex;
+        }
+
+        .scanner-box {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+        }
+
+        .scanner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .scanner-header h2 {
+            font-size: 18px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .btn-close {
+            width: auto;
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 28px;
+            line-height: 1;
+            padding: 0 4px;
+            cursor: pointer;
+        }
+
+        .btn-close:hover {
+            background: none;
+            color: var(--primary-color);
+        }
+
+        #reader {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #000000;
+            min-height: 240px;
+        }
+
+        #reader video {
+            width: 100% !important;
+            border-radius: 12px;
+        }
+
+        .scanner-hint {
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+            margin: 14px 0;
+        }
+
+        .btn-cancel {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        .btn-cancel:hover {
+            background-color: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Registro de Retirada</h1>
+            <p>Digite o número do pedido para salvar na planilha</p>
+        </div>
+
+        <form id="orderForm">
+            <div class="form-group">
+                <label for="numeroPedido">Número do Pedido</label>
+                <input type="text" id="numeroPedido" placeholder="Ex: 10452" required autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+            </div>
+
+            <button type="submit" id="btnRegistrar">
+                <span id="btnText">Registrar</span>
+            </button>
+
+            <button type="button" id="btnEscanear" class="btn-secondary">
+                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                    <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                    <path d="M7 8v8M10.5 8v8M14 8v8M17 8v8"></path>
+                </svg>
+                <span>Escanear código de barras</span>
+            </button>
+        </form>
+
+        <div id="statusMsg" class="status-msg"></div>
+    </div>
+
+    <!-- Tela do leitor de código de barras -->
+    <div id="scannerOverlay" class="scanner-overlay">
+        <div class="scanner-box">
+            <div class="scanner-header">
+                <h2>Escanear Código</h2>
+                <button type="button" id="btnFecharScanner" class="btn-close" aria-label="Fechar">&times;</button>
+            </div>
+            <div id="reader"></div>
+            <p class="scanner-hint">Aponte a câmera para o código de barras do pedido</p>
+            <button type="button" id="btnCancelarScanner" class="btn-cancel">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Biblioteca do leitor (arquivo local, funciona sem internet depois de instalado) -->
+    <script src="./html5-qrcode.min.js"></script>
+
+    <script>
+        // URL DO SEU GOOGLE APPS SCRIPT CONFIGURADA
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9a_KCboE6rlylIU3hC9oKyHUt86KVXhZWM1oOsvKiRru-iSMswJBVKxPmjVs4WfpW/exec';
+
+        const form = document.getElementById('orderForm');
+        const inputPedido = document.getElementById('numeroPedido');
+        const btnRegistrar = document.getElementById('btnRegistrar');
+        const btnText = document.getElementById('btnText');
+        const statusMsg = document.getElementById('statusMsg');
+
+        // Impede a digitação e colagem de caracteres que não sejam números
+        inputPedido.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const pedido = inputPedido.value.trim();
+            if (!pedido) return;
+
+            setLoading(true);
+            hideStatus();
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ numeroPedido: pedido })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showStatus('Pedido registrado com sucesso!', 'success');
+                    inputPedido.value = '';
+                    inputPedido.focus();
+                } else {
+                    showStatus('Erro ao registrar: ' + (result.message || 'Tente novamente.'), 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showStatus('Erro de conexão ou URL inválida.', 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        function setLoading(isLoading) {
+            btnRegistrar.disabled = isLoading;
+            if (isLoading) {
+                btnText.innerHTML = '<span class="spinner"></span> Registrando...';
+            } else {
+                btnText.textContent = 'Registrar';
+            }
+        }
+
+        function showStatus(message, type) {
+            statusMsg.textContent = message;
+            statusMsg.className = `status-msg ${type}`;
+            statusMsg.style.display = 'block';
+        }
+
+        function hideStatus() {
+            statusMsg.style.display = 'none';
+            statusMsg.className = 'status-msg';
+        }
+
+        // ===================================================================
+        // LEITOR DE CÓDIGO DE BARRAS (CÂMERA DO CELULAR)
+        // ===================================================================
+        const btnEscanear = document.getElementById('btnEscanear');
+        const scannerOverlay = document.getElementById('scannerOverlay');
+        const btnFecharScanner = document.getElementById('btnFecharScanner');
+        const btnCancelarScanner = document.getElementById('btnCancelarScanner');
+
+        let html5QrCode = null;
+        let scannerAtivo = false;
+        let scannerCancelado = false;
+        let leituraProcessada = false;
+        let audioCtx = null;
+
+        btnEscanear.addEventListener('click', abrirScanner);
+        btnFecharScanner.addEventListener('click', fecharScanner);
+        btnCancelarScanner.addEventListener('click', fecharScanner);
+        scannerOverlay.addEventListener('click', function (e) {
+            // Toque fora da caixa fecha o leitor
+            if (e.target === scannerOverlay) fecharScanner();
+        });
+
+        async function abrirScanner() {
+            if (typeof Html5Qrcode === 'undefined') {
+                showStatus('O leitor não carregou. Verifique se o arquivo html5-qrcode.min.js está na mesma pasta.', 'error');
+                return;
+            }
+
+            prepararAudio();
+            hideStatus();
+            leituraProcessada = false;
+            scannerCancelado = false;
+            scannerOverlay.classList.add('active');
+
+            // Formatos de código reconhecidos (os mais comuns em etiquetas)
+            const formatos = [
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.CODE_39,
+                Html5QrcodeSupportedFormats.CODE_93,
+                Html5QrcodeSupportedFormats.ITF,
+                Html5QrcodeSupportedFormats.CODABAR,
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E,
+                Html5QrcodeSupportedFormats.QR_CODE
+            ];
+
+            html5QrCode = new Html5Qrcode('reader', { formatsToSupport: formatos, verbose: false });
+
+            const config = {
+                fps: 10,
+                qrbox: function (larguraVisor, alturaVisor) {
+                    const menorLado = Math.min(larguraVisor, alturaVisor);
+                    const largura = Math.floor(menorLado * 0.85);
+                    const altura = Math.floor(largura * 0.55); // retângulo (bom p/ código de barras)
+                    return { width: largura, height: altura };
+                }
+            };
+
+            try {
+                await html5QrCode.start(
+                    { facingMode: 'environment' }, // câmera traseira
+                    config,
+                    aoLerCodigo,
+                    function () { /* ignora falhas de leitura quadro a quadro */ }
+                );
+                scannerAtivo = true;
+
+                // Se o usuário cancelou enquanto a câmera abria, para na hora
+                if (scannerCancelado) {
+                    await pararScanner();
+                }
+            } catch (err) {
+                console.error('Erro ao iniciar a câmera:', err);
+                scannerOverlay.classList.remove('active');
+
+                let msg = 'Não foi possível acessar a câmera.';
+                if (err && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
+                    msg = 'Permissão da câmera negada. Autorize o acesso à câmera nas configurações e tente de novo.';
+                } else if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+                    msg = 'A câmera só funciona em páginas seguras (https). Abra esta página por um endereço https:// e tente novamente.';
+                } else if (err && err.name === 'NotFoundError') {
+                    msg = 'Nenhuma câmera foi encontrada neste dispositivo.';
+                }
+                showStatus(msg, 'error');
+                await pararScanner();
+            }
+        }
+
+        function aoLerCodigo(textoLido) {
+            if (leituraProcessada) return; // evita ler o mesmo código várias vezes
+            leituraProcessada = true;
+
+            tocarBip();
+            if (navigator.vibrate) navigator.vibrate(200);
+
+            // O campo é numérico, então mantém apenas os números lidos.
+            // Se seus códigos tiverem letras, troque a linha abaixo por: inputPedido.value = textoLido.trim();
+            const somenteNumeros = textoLido.replace(/\D/g, '');
+            inputPedido.value = somenteNumeros || textoLido.trim();
+
+            fecharScanner();
+            showStatus('Código lido: ' + inputPedido.value + '. Confira e toque em Registrar.', 'success');
+
+            // Para registrar automaticamente logo após o escaneamento, descomente a linha abaixo:
+            // form.requestSubmit();
+        }
+
+        async function fecharScanner() {
+            scannerCancelado = true;
+            scannerOverlay.classList.remove('active');
+            await pararScanner();
+        }
+
+        async function pararScanner() {
+            if (html5QrCode) {
+                try { await html5QrCode.stop(); } catch (e) { /* já estava parado */ }
+                try { html5QrCode.clear(); } catch (e) { /* ignora */ }
+            }
+            scannerAtivo = false;
+            html5QrCode = null;
+        }
+
+        // Prepara o som de "bip". Iniciado no toque do botão para funcionar também no iPhone.
+        function prepararAudio() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            } catch (e) { /* áudio indisponível neste aparelho */ }
+        }
+
+        function tocarBip() {
+            try {
+                if (!audioCtx) return;
+                const oscilador = audioCtx.createOscillator();
+                const ganho = audioCtx.createGain();
+                oscilador.connect(ganho);
+                ganho.connect(audioCtx.destination);
+                oscilador.type = 'sine';
+                oscilador.frequency.value = 880;
+                ganho.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                oscilador.start();
+                oscilador.stop(audioCtx.currentTime + 0.15);
+            } catch (e) { /* ignora */ }
+        }
+
+        // ===================================================================
+        // REGISTRO DO SERVICE WORKER (transforma a página em app instalável)
+        // ===================================================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('sw.js')
+                    .catch(function (err) { console.log('Service worker não registrado:', err); });
+            });
+        }
+    </script>
+</body>
+</html>
