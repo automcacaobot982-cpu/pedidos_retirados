@@ -2,149 +2,214 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Pedidos Retirados</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Registro de Pedidos Retirados · Belt Correias</title>
 
     <!-- ===== Configuração do App (PWA) ===== -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#0c353b">
     <link rel="apple-touch-icon" href="icon-192.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Retirada">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary-color: #0f172a;
-            --accent-color: #2563eb;
-            --accent-hover: #1d4ed8;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-color: #334155;
-            --success-color: #16a34a;
-            --error-color: #dc2626;
-            --border-color: #e2e8f0;
+            --bg:#eceff1;
+            --surface:#ffffff;
+            --surface-2:#f6f8f9;
+            --ink:#16191c;
+            --ink-2:#586066;
+            --ink-3:#8a939a;
+            --line:#dde3e6;
+            --line-2:#c9d2d6;
+            --bar:#0c353b;
+            --brand:#0d5b63;
+            --brand-2:#0a474d;
+            --brand-tint:#e2efef;
+            --red:#cf3a2c;
+            --red-tint:#fbe6e3;
+            --green:#1a9455;
+            --green-tint:#e2f3ea;
+            --shadow-sm:0 1px 2px rgba(16,25,30,.08);
+            --shadow-md:0 10px 30px rgba(12,42,48,.14);
+            --r:12px;
+            --r-sm:8px;
+            --sans:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+            --num:'Space Grotesk','IBM Plex Sans',system-ui,sans-serif;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: var(--sans);
+            background-color: var(--bg);
+            color: var(--ink);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.45;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            min-height: 100dvh;
+        }
+
+        button { font-family: inherit; cursor: pointer; }
+        input, select, textarea { font-family: inherit; }
+
+        /* TOPBAR */
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: var(--bar);
+            color: #eaf6f5;
+            display: flex;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            gap: 14px;
+            padding: 0 22px;
+            height: 60px;
         }
 
-        .container {
-            background-color: var(--card-bg);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            width: 100%;
-            max-width: 440px;
-            border: 1px solid var(--border-color);
+        .topbar .mark {
+            width: 34px;
+            height: 34px;
+            flex: 0 0 auto;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
+        .topbar .tb-title {
+            font-family: var(--num);
+            font-weight: 600;
+            font-size: 15px;
         }
 
-        .header h1 {
-            font-size: 24px;
-            color: var(--primary-color);
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 14px;
-            color: #64748b;
-        }
-
-        .form-group {
-            margin-bottom: 24px;
-        }
-
-        label {
+        .topbar .tb-title small {
             display: block;
+            font-family: var(--sans);
+            font-weight: 400;
+            font-size: 11px;
+            color: #9ccbc7;
+        }
+
+        /* CONTEÚDO */
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 32px 20px 48px;
+        }
+
+        .card {
+            background-color: var(--surface);
+            padding: 32px;
+            border-radius: var(--r);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--line);
+        }
+
+        .card .eyebrow {
+            color: var(--brand);
+            font-weight: 600;
+            font-size: 13px;
+            margin: 0 0 6px;
+        }
+
+        .card h1 {
+            font-family: var(--num);
+            font-weight: 600;
+            font-size: 24px;
+            margin: 0 0 4px;
+            color: var(--ink);
+        }
+
+        .card .sub {
+            margin: 0 0 26px;
+            color: var(--ink-2);
             font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--primary-color);
         }
 
-        input[type="text"] {
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--ink-2);
+            margin-bottom: 7px;
+        }
+
+        .control {
             width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            padding: 12px 13px;
+            border: 1px solid var(--line-2);
+            border-radius: var(--r-sm);
+            background: var(--surface-2);
             font-size: 16px;
-            transition: all 0.2s ease;
+            color: var(--ink);
             outline: none;
-            background-color: #f8fafc;
+            transition: all .15s ease;
         }
 
-        input[type="text"]:focus {
-            border-color: var(--accent-color);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        .control:focus {
+            border-color: var(--brand);
+            background-color: var(--surface);
+            box-shadow: 0 0 0 3px rgba(13, 91, 99, 0.14);
         }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-            display: flex;
-            justify-content: center;
+        .btn {
+            display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
+            width: 100%;
+            border: none;
+            border-radius: var(--r-sm);
+            font-weight: 600;
+            font-size: 15px;
+            padding: 13px 18px;
+            transition: all .15s ease;
         }
 
-        button:hover {
-            background-color: var(--accent-hover);
+        .btn:active { transform: scale(0.99); }
+
+        .btn-primary {
+            background: var(--brand);
+            color: #fff;
         }
 
-        button:active {
-            transform: scale(0.99);
-        }
+        .btn-primary:hover { background: var(--brand-2); }
 
-        button:disabled {
-            background-color: #94a3b8;
+        .btn-primary:disabled {
+            background: #94a3b8;
             cursor: not-allowed;
         }
 
-        /* Botão secundário (Escanear) */
-        .btn-secondary {
+        .btn-ghost {
             margin-top: 12px;
-            background-color: #ffffff;
-            color: var(--accent-color);
-            border: 1px solid var(--accent-color);
+            background: var(--surface);
+            color: var(--brand);
+            border: 1px solid var(--line-2);
         }
 
-        .btn-secondary:hover {
-            background-color: #eff6ff;
+        .btn-ghost:hover {
+            background: var(--brand-tint);
+            border-color: var(--brand);
         }
 
-        .btn-secondary:disabled {
-            background-color: #f1f5f9;
-            color: #94a3b8;
-            border-color: var(--border-color);
+        .btn-ghost:disabled {
+            background: var(--surface-2);
+            color: var(--ink-3);
+            border-color: var(--line);
+            cursor: not-allowed;
         }
 
         .btn-icon {
@@ -155,8 +220,8 @@
 
         .status-msg {
             margin-top: 20px;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 12px 14px;
+            border-radius: var(--r-sm);
             font-size: 14px;
             text-align: center;
             display: none;
@@ -165,14 +230,14 @@
 
         .status-msg.success {
             display: block;
-            background-color: #dcfce7;
+            background-color: var(--green-tint);
             color: #15803d;
             border: 1px solid #bbf7d0;
         }
 
         .status-msg.error {
             display: block;
-            background-color: #fee2e2;
+            background-color: var(--red-tint);
             color: #b91c1c;
             border: 1px solid #fecaca;
         }
@@ -193,13 +258,14 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* ===== Leitor de código de barras ===== */
+        /* ===== Leitor de código de barras (modal) ===== */
         .scanner-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background-color: rgba(15, 23, 42, 0.9);
-            z-index: 1000;
+            background: rgba(9, 28, 32, 0.55);
+            backdrop-filter: blur(2px);
+            z-index: 80;
             justify-content: center;
             align-items: center;
             padding: 16px;
@@ -210,46 +276,49 @@
         }
 
         .scanner-box {
-            background-color: var(--card-bg);
-            border-radius: 16px;
+            background-color: var(--surface);
+            border-radius: var(--r);
             width: 100%;
             max-width: 440px;
-            padding: 20px;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
         }
 
         .scanner-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--line);
         }
 
         .scanner-header h2 {
+            font-family: var(--num);
             font-size: 18px;
-            color: var(--primary-color);
-            font-weight: 700;
+            color: var(--ink);
+            font-weight: 600;
         }
 
         .btn-close {
             width: auto;
             background: none;
             border: none;
-            color: #64748b;
+            color: var(--ink-2);
             font-size: 28px;
             line-height: 1;
             padding: 0 4px;
             cursor: pointer;
         }
 
-        .btn-close:hover {
-            background: none;
-            color: var(--primary-color);
+        .btn-close:hover { color: var(--ink); }
+
+        .scanner-body {
+            padding: 22px;
         }
 
         #reader {
             width: 100%;
-            border-radius: 12px;
+            border-radius: var(--r-sm);
             overflow: hidden;
             background-color: #000000;
             min-height: 240px;
@@ -257,58 +326,66 @@
 
         #reader video {
             width: 100% !important;
-            border-radius: 12px;
+            border-radius: var(--r-sm);
         }
 
         .scanner-hint {
             text-align: center;
             font-size: 13px;
-            color: #64748b;
-            margin: 14px 0;
+            color: var(--ink-2);
+            margin: 16px 0;
         }
 
         .btn-cancel {
-            background-color: #f1f5f9;
-            color: var(--primary-color);
+            background-color: var(--surface-2);
+            color: var(--ink);
+            border: 1px solid var(--line-2);
         }
 
-        .btn-cancel:hover {
-            background-color: #e2e8f0;
-        }
+        .btn-cancel:hover { background-color: var(--line); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>Registro de Retirada</h1>
-            <p>Digite o número do pedido para salvar na planilha</p>
+    <header class="topbar">
+        <svg class="mark" viewBox="0 0 64 64" fill="none">
+            <rect width="64" height="64" rx="13" fill="#0a3a40"/>
+            <g stroke="#7fd4d0" stroke-width="3"><circle cx="24" cy="32" r="12"/><circle cx="44" cy="32" r="8"/></g>
+        </svg>
+        <div class="tb-title">Belt Correias<small>Registro de Retirada</small></div>
+    </header>
+
+    <main>
+        <div class="card">
+            <p class="eyebrow">Expedição</p>
+            <h1>Registrar Pedido Retirado</h1>
+            <p class="sub">Digite o número do pedido para salvar na planilha</p>
+
+            <form id="orderForm">
+                <div class="field">
+                    <label for="numeroPedido">Número do Pedido</label>
+                    <input type="text" id="numeroPedido" class="control" placeholder="Ex: 10452" required autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+                </div>
+
+                <button type="submit" id="btnRegistrar" class="btn btn-primary">
+                    <span id="btnText">Registrar</span>
+                </button>
+
+                <button type="button" id="btnEscanear" class="btn btn-ghost">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                        <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                        <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                        <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                        <path d="M7 8v8M10.5 8v8M14 8v8M17 8v8"></path>
+                    </svg>
+                    <span>Escanear código de barras</span>
+                </button>
+            </form>
+
+            <div id="statusMsg" class="status-msg"></div>
         </div>
-
-        <form id="orderForm">
-            <div class="form-group">
-                <label for="numeroPedido">Número do Pedido</label>
-                <input type="text" id="numeroPedido" placeholder="Ex: 10452" required autocomplete="off" inputmode="numeric" pattern="[0-9]*">
-            </div>
-
-            <button type="submit" id="btnRegistrar">
-                <span id="btnText">Registrar</span>
-            </button>
-
-            <button type="button" id="btnEscanear" class="btn-secondary">
-                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
-                    <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
-                    <path d="M7 8v8M10.5 8v8M14 8v8M17 8v8"></path>
-                </svg>
-                <span>Escanear código de barras</span>
-            </button>
-        </form>
-
-        <div id="statusMsg" class="status-msg"></div>
-    </div>
+    </main>
 
     <!-- Tela do leitor de código de barras -->
     <div id="scannerOverlay" class="scanner-overlay">
@@ -317,9 +394,11 @@
                 <h2>Escanear Código</h2>
                 <button type="button" id="btnFecharScanner" class="btn-close" aria-label="Fechar">&times;</button>
             </div>
-            <div id="reader"></div>
-            <p class="scanner-hint">Aponte a câmera para o código de barras do pedido</p>
-            <button type="button" id="btnCancelarScanner" class="btn-cancel">Cancelar</button>
+            <div class="scanner-body">
+                <div id="reader"></div>
+                <p class="scanner-hint">Aponte a câmera para o código de barras do pedido</p>
+                <button type="button" id="btnCancelarScanner" class="btn btn-cancel">Cancelar</button>
+            </div>
         </div>
     </div>
 
