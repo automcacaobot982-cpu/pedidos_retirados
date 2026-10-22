@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Registro de Pedidos Retirados · Belt Correias</title>
+    <title>Registro de Retirada · Belt Correias</title>
 
     <!-- ===== Configuração do App (PWA) ===== -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0c353b">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="description" content="Registro de pedidos retirados na expedição da Belt Correias.">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Retirada">
+
+    <!-- ===== Ícones (reconhecimento em navegador / iOS / Android) ===== -->
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,23 +37,22 @@
             --brand:#0d5b63;
             --brand-2:#0a474d;
             --brand-tint:#e2efef;
+            --amber:#b57f00;
+            --amber-text:#854d0e;
+            --amber-tint:#fef6dd;
             --red:#cf3a2c;
             --red-tint:#fbe6e3;
             --green:#1a9455;
             --green-tint:#e2f3ea;
             --shadow-sm:0 1px 2px rgba(16,25,30,.08);
             --shadow-md:0 10px 30px rgba(12,42,48,.14);
-            --r:12px;
-            --r-sm:8px;
+            --r:14px;
+            --r-sm:9px;
             --sans:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
             --num:'Space Grotesk','IBM Plex Sans',system-ui,sans-serif;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: var(--sans);
@@ -62,8 +67,10 @@
 
         button { font-family: inherit; cursor: pointer; }
         input, select, textarea { font-family: inherit; }
+        .hidden { display: none !important; }
+        .ico { width: 1.15em; height: 1.15em; flex: 0 0 auto; vertical-align: -0.17em; }
 
-        /* TOPBAR */
+        /* ===== TOPBAR ===== */
         .topbar {
             position: sticky;
             top: 0;
@@ -72,209 +79,203 @@
             color: #eaf6f5;
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 0 22px;
-            height: 60px;
+            gap: 12px;
+            padding: 0 16px;
+            min-height: 60px;
+            padding-top: env(safe-area-inset-top);
         }
-
-        .topbar .mark {
-            width: 34px;
-            height: 34px;
-            flex: 0 0 auto;
-        }
-
-        .topbar .tb-title {
+        .tb-brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+        .tb-mark { width: 38px; height: 38px; flex: 0 0 auto; }
+        .tb-title {
             font-family: var(--num);
             font-weight: 600;
             font-size: 15px;
+            letter-spacing: .01em;
+            white-space: nowrap;
+            line-height: 1.1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-        .topbar .tb-title small {
+        .tb-title small {
             display: block;
             font-family: var(--sans);
             font-weight: 400;
             font-size: 11px;
             color: #9ccbc7;
+            letter-spacing: 0;
+        }
+        .tb-spacer { flex: 1; }
+        .tb-actions { display: flex; align-items: center; gap: 8px; }
+
+        .badge-online {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: .03em;
+            color: #bfe9e4;
+            background: rgba(127,212,208,.12);
+            border: 1px solid rgba(127,212,208,.34);
+            padding: 5px 10px 5px 8px;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .badge-online .dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 0 0 rgba(52,211,153,.6);
+            animation: pulse 2s infinite;
+        }
+        .badge-online.offline { color: #ffd98a; background: rgba(245,197,66,.14); border-color: rgba(245,197,66,.4); }
+        .badge-online.offline .dot { background: #f5c542; animation: none; box-shadow: none; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(52,211,153,.55); }
+            70% { box-shadow: 0 0 0 6px rgba(52,211,153,0); }
+            100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); }
         }
 
-        /* CONTEÚDO */
-        main {
-            flex: 1;
-            width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 32px 20px 48px;
+        .tb-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: var(--r-sm);
+            font-size: 12.5px;
+            font-weight: 600;
+            padding: 7px 11px;
+            white-space: nowrap;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.22);
+            color: #fff;
+            transition: background .15s;
         }
+        .tb-btn:hover { background: rgba(255,255,255,.2); }
+
+        /* ===== CONTEÚDO ===== */
+        main { flex: 1; width: 100%; max-width: 480px; margin: 0 auto; padding: 28px 18px 48px; }
 
         .card {
             background-color: var(--surface);
-            padding: 32px;
+            padding: 28px;
             border-radius: var(--r);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
             border: 1px solid var(--line);
         }
-
         .card .eyebrow {
+            display: inline-flex; align-items: center; gap: 6px;
             color: var(--brand);
             font-weight: 600;
-            font-size: 13px;
-            margin: 0 0 6px;
+            font-size: 11.5px;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            margin: 0 0 8px;
         }
-
+        .card .eyebrow .ico { width: 15px; height: 15px; vertical-align: 0; }
         .card h1 {
             font-family: var(--num);
             font-weight: 600;
-            font-size: 24px;
+            font-size: 23px;
             margin: 0 0 4px;
             color: var(--ink);
         }
+        .card .sub { margin: 0 0 24px; color: var(--ink-2); font-size: 14px; }
 
-        .card .sub {
-            margin: 0 0 26px;
-            color: var(--ink-2);
-            font-size: 14px;
+        .field { margin-bottom: 18px; }
+        .field label { display: block; font-size: 13px; font-weight: 600; color: var(--ink-2); margin-bottom: 7px; }
+
+        .control-wrap { position: relative; display: flex; align-items: center; }
+        .control-wrap .lead-ico {
+            position: absolute; left: 13px; color: var(--ink-3);
+            width: 20px; height: 20px; pointer-events: none;
         }
-
-        .field {
-            margin-bottom: 18px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--ink-2);
-            margin-bottom: 7px;
-        }
-
         .control {
             width: 100%;
-            padding: 12px 13px;
+            padding: 13px 13px 13px 42px;
             border: 1px solid var(--line-2);
             border-radius: var(--r-sm);
             background: var(--surface-2);
             font-size: 16px;
             color: var(--ink);
             outline: none;
-            transition: all .15s ease;
+            transition: border-color .15s, box-shadow .15s, background .15s;
         }
-
         .control:focus {
             border-color: var(--brand);
             background-color: var(--surface);
-            box-shadow: 0 0 0 3px rgba(13, 91, 99, 0.14);
+            box-shadow: 0 0 0 3px rgba(13,91,99,.14);
         }
+        .control:focus + .lead-ico, .control-wrap:focus-within .lead-ico { color: var(--brand); }
+        .control::placeholder { color: var(--ink-3); }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 9px;
             width: 100%;
             border: none;
             border-radius: var(--r-sm);
             font-weight: 600;
             font-size: 15px;
-            padding: 13px 18px;
-            transition: all .15s ease;
+            padding: 14px 18px;
+            transition: background .15s, transform .08s, opacity .15s;
         }
-
-        .btn:active { transform: scale(0.99); }
-
-        .btn-primary {
-            background: var(--brand);
-            color: #fff;
-        }
-
+        .btn:active { transform: scale(.99); }
+        #btnText { display: inline-flex; align-items: center; gap: 9px; }
+        .btn-primary { background: var(--brand); color: #fff; }
         .btn-primary:hover { background: var(--brand-2); }
-
-        .btn-primary:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-        }
-
+        .btn-primary:disabled { background: #9fb4b6; cursor: not-allowed; }
         .btn-ghost {
             margin-top: 12px;
             background: var(--surface);
             color: var(--brand);
             border: 1px solid var(--line-2);
         }
-
-        .btn-ghost:hover {
-            background: var(--brand-tint);
-            border-color: var(--brand);
-        }
-
-        .btn-ghost:disabled {
-            background: var(--surface-2);
-            color: var(--ink-3);
-            border-color: var(--line);
-            cursor: not-allowed;
-        }
-
-        .btn-icon {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-        }
+        .btn-ghost:hover { background: var(--brand-tint); border-color: var(--brand); }
+        .btn-ghost:disabled { background: var(--surface-2); color: var(--ink-3); border-color: var(--line); cursor: not-allowed; }
+        .btn-icon { width: 20px; height: 20px; flex-shrink: 0; }
 
         .status-msg {
             margin-top: 20px;
             padding: 12px 14px;
             border-radius: var(--r-sm);
             font-size: 14px;
-            text-align: center;
             display: none;
-            font-weight: 500;
+            align-items: center;
+            gap: 9px;
+            font-weight: 600;
+            line-height: 1.3;
+            word-break: break-word;
         }
-
-        .status-msg.success {
-            display: block;
-            background-color: var(--green-tint);
-            color: #15803d;
-            border: 1px solid #bbf7d0;
-        }
-
-        .status-msg.error {
-            display: block;
-            background-color: var(--red-tint);
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-        }
+        .status-msg .ico { width: 18px; height: 18px; }
+        .status-msg.success { display: flex; background-color: var(--green-tint); color: #157347; border: 1px solid rgba(26,148,85,.4); }
+        .status-msg.error { display: flex; background-color: var(--red-tint); color: #b32c20; border: 1px solid rgba(207,58,44,.4); }
 
         .spinner {
-            width: 18px;
-            height: 18px;
-            border: 2px solid #ffffff;
+            width: 18px; height: 18px;
+            border: 2px solid currentColor;
             border-bottom-color: transparent;
             border-radius: 50%;
             display: inline-block;
-            box-sizing: border-box;
             animation: rotation 1s linear infinite;
         }
-
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes rotation { to { transform: rotate(360deg); } }
 
         /* ===== Leitor de código de barras (modal) ===== */
         .scanner-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(9, 28, 32, 0.55);
+            background: rgba(9,28,32,.55);
             backdrop-filter: blur(2px);
             z-index: 80;
             justify-content: center;
             align-items: center;
             padding: 16px;
         }
-
-        .scanner-overlay.active {
-            display: flex;
-        }
-
+        .scanner-overlay.active { display: flex; }
         .scanner-box {
             background-color: var(--surface);
             border-radius: var(--r);
@@ -283,92 +284,104 @@
             box-shadow: var(--shadow-md);
             overflow: hidden;
         }
-
         .scanner-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 22px;
-            border-bottom: 1px solid var(--line);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px; border-bottom: 1px solid var(--line);
         }
-
         .scanner-header h2 {
-            font-family: var(--num);
-            font-size: 18px;
-            color: var(--ink);
-            font-weight: 600;
+            display: inline-flex; align-items: center; gap: 9px;
+            font-family: var(--num); font-size: 17px; color: var(--ink); font-weight: 600;
         }
-
+        .scanner-header h2 .ico { width: 19px; height: 19px; color: var(--brand); }
         .btn-close {
-            width: auto;
-            background: none;
-            border: none;
-            color: var(--ink-2);
-            font-size: 28px;
-            line-height: 1;
-            padding: 0 4px;
-            cursor: pointer;
+            width: 34px; height: 34px;
+            display: grid; place-items: center;
+            background: var(--surface-2); border: 1px solid var(--line);
+            border-radius: 8px; color: var(--ink-2); padding: 0;
         }
-
-        .btn-close:hover { color: var(--ink); }
-
-        .scanner-body {
-            padding: 22px;
-        }
-
-        #reader {
-            width: 100%;
-            border-radius: var(--r-sm);
-            overflow: hidden;
-            background-color: #000000;
-            min-height: 240px;
-        }
-
-        #reader video {
-            width: 100% !important;
-            border-radius: var(--r-sm);
-        }
-
-        .scanner-hint {
-            text-align: center;
-            font-size: 13px;
-            color: var(--ink-2);
-            margin: 16px 0;
-        }
-
-        .btn-cancel {
-            background-color: var(--surface-2);
-            color: var(--ink);
-            border: 1px solid var(--line-2);
-        }
-
+        .btn-close:hover { color: var(--ink); background: var(--line); }
+        .btn-close .ico { width: 18px; height: 18px; vertical-align: 0; }
+        .scanner-body { padding: 20px; }
+        #reader { width: 100%; border-radius: var(--r-sm); overflow: hidden; background-color: #0b1417; min-height: 240px; border: 1px solid var(--line-2); }
+        #reader video { width: 100% !important; border-radius: var(--r-sm); }
+        .scanner-hint { text-align: center; font-size: 13px; color: var(--ink-2); margin: 16px 0; }
+        .btn-cancel { background-color: var(--surface-2); color: var(--ink); border: 1px solid var(--line-2); }
         .btn-cancel:hover { background-color: var(--line); }
+
+        /* ===== Modal de instalação (fallback iOS) ===== */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(9,28,32,.55); backdrop-filter: blur(2px);
+            z-index: 90; display: flex; align-items: center; justify-content: center; padding: 16px;
+        }
+        .modal { background: var(--surface); width: 100%; max-width: 400px; border-radius: var(--r); box-shadow: var(--shadow-md); overflow: hidden; }
+        .modal-head { display: flex; align-items: center; gap: 10px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+        .modal-head .m-ico { width: 36px; height: 36px; flex: 0 0 auto; display: grid; place-items: center; background: var(--brand-tint); color: var(--brand); border-radius: 9px; }
+        .modal-head h3 { margin: 0; font-family: var(--num); font-weight: 600; font-size: 16px; }
+        .modal-body { padding: 18px 20px; font-size: .9rem; color: var(--ink-2); line-height: 1.5; }
+        .modal-body ol { margin: 10px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; }
+        .modal-body b { color: var(--ink); }
+        .modal-foot { display: flex; justify-content: flex-end; padding: 14px 20px; border-top: 1px solid var(--line); }
+        .modal-foot .btn { width: auto; padding: 10px 20px; }
+
+        @media (max-width: 560px) { .tb-title small { display: none; } }
+        @media (max-width: 430px) {
+            .topbar { gap: 8px; padding: 0 12px; }
+            .tb-btn span.lbl { display: none; }
+            .tb-btn { padding: 8px; }
+            .tb-title { font-size: 15px; }
+            .badge-online { font-size: 10px; padding: 5px 8px 5px 7px; letter-spacing: .02em; }
+        }
     </style>
 </head>
 <body>
 
     <header class="topbar">
-        <svg class="mark" viewBox="0 0 64 64" fill="none">
-            <rect width="64" height="64" rx="13" fill="#0a3a40"/>
-            <g stroke="#7fd4d0" stroke-width="3"><circle cx="24" cy="32" r="12"/><circle cx="44" cy="32" r="8"/></g>
-        </svg>
-        <div class="tb-title">Belt Correias<small>Registro de Retirada</small></div>
+        <div class="tb-brand">
+            <svg class="tb-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                <rect width="64" height="64" rx="15" fill="#0a474d"/>
+                <g stroke="#7fd4d0" stroke-width="3.4" fill="none">
+                    <circle cx="25" cy="33" r="12.5"/>
+                    <circle cx="46" cy="33" r="7.5"/>
+                </g>
+                <path d="M25 20.5 H46" stroke="#cfeeea" stroke-width="3.4" stroke-linecap="round"/>
+            </svg>
+            <div class="tb-title">Registro de Retirada<small>Belt Correias</small></div>
+        </div>
+
+        <div class="tb-spacer"></div>
+
+        <div class="tb-actions">
+            <div class="badge-online" id="statusBadge">
+                <span class="dot"></span><span id="statusText">SISTEMA ATIVO</span>
+            </div>
+            <button type="button" class="tb-btn" id="btnInstall" title="Baixar aplicativo no celular">
+                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 10 4.5 4 4.5-4"/><path d="M5 20h14"/></svg>
+                <span class="lbl">Baixar app</span>
+            </button>
+        </div>
     </header>
 
     <main>
         <div class="card">
-            <p class="eyebrow">Expedição</p>
-            <h1>Registrar Pedido Retirado</h1>
-            <p class="sub">Digite o número do pedido para salvar na planilha</p>
+            <p class="eyebrow">
+                <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                Expedição
+            </p>
+            <h1>Registrar pedido retirado</h1>
+            <p class="sub">Digite ou escaneie o número do pedido para salvar na planilha.</p>
 
             <form id="orderForm">
                 <div class="field">
-                    <label for="numeroPedido">Número do Pedido</label>
-                    <input type="text" id="numeroPedido" class="control" placeholder="Ex: 10452" required autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+                    <label for="numeroPedido">Número do pedido</label>
+                    <div class="control-wrap">
+                        <input type="text" id="numeroPedido" class="control" placeholder="Ex: 10452" required autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+                        <svg class="lead-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5a1 1 0 0 1 1-1h2"/><path d="M4 17v2a1 1 0 0 0 1 1h2"/><path d="M20 7V5a1 1 0 0 0-1-1h-2"/><path d="M20 17v2a1 1 0 0 1-1 1h-2"/><path d="M7.5 8v8M11 8v8M14 8v8M16.5 8v8"/></svg>
+                    </div>
                 </div>
 
                 <button type="submit" id="btnRegistrar" class="btn btn-primary">
-                    <span id="btnText">Registrar</span>
+                    <span id="btnText"></span>
                 </button>
 
                 <button type="button" id="btnEscanear" class="btn btn-ghost">
@@ -391,8 +404,13 @@
     <div id="scannerOverlay" class="scanner-overlay">
         <div class="scanner-box">
             <div class="scanner-header">
-                <h2>Escanear Código</h2>
-                <button type="button" id="btnFecharScanner" class="btn-close" aria-label="Fechar">&times;</button>
+                <h2>
+                    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8v8M10.5 8v8M14 8v8M17 8v8"/></svg>
+                    Escanear código
+                </h2>
+                <button type="button" id="btnFecharScanner" class="btn-close" aria-label="Fechar">
+                    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
             </div>
             <div class="scanner-body">
                 <div id="reader"></div>
@@ -402,12 +420,35 @@
         </div>
     </div>
 
+    <!-- Modal: instruções de instalação (fallback iOS) -->
+    <div id="installModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-head">
+                <div class="m-ico">
+                    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="m7.5 10 4.5 4 4.5-4"/><path d="M5 20h14"/></svg>
+                </div>
+                <h3>Instalar no celular</h3>
+            </div>
+            <div class="modal-body" id="installHelpBody"></div>
+            <div class="modal-foot">
+                <button type="button" class="btn btn-primary" onclick="fecharInstallModal()">Entendi</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Biblioteca do leitor (arquivo local, funciona sem internet depois de instalado) -->
     <script src="./html5-qrcode.min.js"></script>
 
     <script>
-        // URL DO SEU GOOGLE APPS SCRIPT CONFIGURADA
+        // URL DO GOOGLE APPS SCRIPT
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9a_KCboE6rlylIU3hC9oKyHUt86KVXhZWM1oOsvKiRru-iSMswJBVKxPmjVs4WfpW/exec';
+
+        /* ===== Ícones SVG usados no JS ===== */
+        const ICO = {
+            save: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.8L15.2 3Z"/><path d="M17 21v-7H7v7"/><path d="M7 3v5h7"/></svg>',
+            ok: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="m8.5 11.5 3 3L22 4.5"/></svg>',
+            err: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg>'
+        };
 
         const form = document.getElementById('orderForm');
         const inputPedido = document.getElementById('numeroPedido');
@@ -415,8 +456,10 @@
         const btnText = document.getElementById('btnText');
         const statusMsg = document.getElementById('statusMsg');
 
+        btnText.innerHTML = ICO.save + '<span>Registrar</span>';
+
         // Impede a digitação e colagem de caracteres que não sejam números
-        inputPedido.addEventListener('input', function(e) {
+        inputPedido.addEventListener('input', function() {
             this.value = this.value.replace(/\D/g, '');
         });
 
@@ -456,22 +499,38 @@
         function setLoading(isLoading) {
             btnRegistrar.disabled = isLoading;
             if (isLoading) {
-                btnText.innerHTML = '<span class="spinner"></span> Registrando...';
+                btnText.innerHTML = '<span class="spinner"></span><span>Registrando…</span>';
             } else {
-                btnText.textContent = 'Registrar';
+                btnText.innerHTML = ICO.save + '<span>Registrar</span>';
             }
         }
 
         function showStatus(message, type) {
-            statusMsg.textContent = message;
-            statusMsg.className = `status-msg ${type}`;
-            statusMsg.style.display = 'block';
+            statusMsg.innerHTML = (ICO[type === 'success' ? 'ok' : 'err']) + '<span>' + message + '</span>';
+            statusMsg.className = 'status-msg ' + type;
         }
 
         function hideStatus() {
             statusMsg.style.display = 'none';
             statusMsg.className = 'status-msg';
+            statusMsg.innerHTML = '';
         }
+
+        // ===== Status de conexão (online/offline) =====
+        function atualizarStatusConexao() {
+            const badge = document.getElementById('statusBadge');
+            const txt = document.getElementById('statusText');
+            if (navigator.onLine) {
+                badge.classList.remove('offline');
+                txt.innerText = 'SISTEMA ATIVO';
+            } else {
+                badge.classList.add('offline');
+                txt.innerText = 'SEM CONEXÃO';
+            }
+        }
+        window.addEventListener('online', atualizarStatusConexao);
+        window.addEventListener('offline', atualizarStatusConexao);
+        atualizarStatusConexao();
 
         // ===================================================================
         // LEITOR DE CÓDIGO DE BARRAS (CÂMERA DO CELULAR)
@@ -491,7 +550,6 @@
         btnFecharScanner.addEventListener('click', fecharScanner);
         btnCancelarScanner.addEventListener('click', fecharScanner);
         scannerOverlay.addEventListener('click', function (e) {
-            // Toque fora da caixa fecha o leitor
             if (e.target === scannerOverlay) fecharScanner();
         });
 
@@ -507,7 +565,6 @@
             scannerCancelado = false;
             scannerOverlay.classList.add('active');
 
-            // Formatos de código reconhecidos (os mais comuns em etiquetas)
             const formatos = [
                 Html5QrcodeSupportedFormats.CODE_128,
                 Html5QrcodeSupportedFormats.CODE_39,
@@ -528,21 +585,20 @@
                 qrbox: function (larguraVisor, alturaVisor) {
                     const menorLado = Math.min(larguraVisor, alturaVisor);
                     const largura = Math.floor(menorLado * 0.85);
-                    const altura = Math.floor(largura * 0.55); // retângulo (bom p/ código de barras)
+                    const altura = Math.floor(largura * 0.55);
                     return { width: largura, height: altura };
                 }
             };
 
             try {
                 await html5QrCode.start(
-                    { facingMode: 'environment' }, // câmera traseira
+                    { facingMode: 'environment' },
                     config,
                     aoLerCodigo,
                     function () { /* ignora falhas de leitura quadro a quadro */ }
                 );
                 scannerAtivo = true;
 
-                // Se o usuário cancelou enquanto a câmera abria, para na hora
                 if (scannerCancelado) {
                     await pararScanner();
                 }
@@ -564,22 +620,17 @@
         }
 
         function aoLerCodigo(textoLido) {
-            if (leituraProcessada) return; // evita ler o mesmo código várias vezes
+            if (leituraProcessada) return;
             leituraProcessada = true;
 
             tocarBip();
             if (navigator.vibrate) navigator.vibrate(200);
 
-            // O campo é numérico, então mantém apenas os números lidos.
-            // Se seus códigos tiverem letras, troque a linha abaixo por: inputPedido.value = textoLido.trim();
             const somenteNumeros = textoLido.replace(/\D/g, '');
             inputPedido.value = somenteNumeros || textoLido.trim();
 
             fecharScanner();
             showStatus('Código lido: ' + inputPedido.value + '. Confira e toque em Registrar.', 'success');
-
-            // Para registrar automaticamente logo após o escaneamento, descomente a linha abaixo:
-            // form.requestSubmit();
         }
 
         async function fecharScanner() {
@@ -590,23 +641,18 @@
 
         async function pararScanner() {
             if (html5QrCode) {
-                try { await html5QrCode.stop(); } catch (e) { /* já estava parado */ }
-                try { html5QrCode.clear(); } catch (e) { /* ignora */ }
+                try { await html5QrCode.stop(); } catch (e) {}
+                try { html5QrCode.clear(); } catch (e) {}
             }
             scannerAtivo = false;
             html5QrCode = null;
         }
 
-        // Prepara o som de "bip". Iniciado no toque do botão para funcionar também no iPhone.
         function prepararAudio() {
             try {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx && audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
-            } catch (e) { /* áudio indisponível neste aparelho */ }
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            } catch (e) {}
         }
 
         function tocarBip() {
@@ -621,8 +667,64 @@
                 ganho.gain.setValueAtTime(0.25, audioCtx.currentTime);
                 oscilador.start();
                 oscilador.stop(audioCtx.currentTime + 0.15);
-            } catch (e) { /* ignora */ }
+            } catch (e) {}
         }
+
+        // ===================================================================
+        // INSTALAÇÃO DO PWA (Baixar app)
+        // ===================================================================
+        let deferredPrompt = null;
+        const btnInstall = document.getElementById('btnInstall');
+        const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+        if (isStandalone()) btnInstall.classList.add('hidden');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!isStandalone()) btnInstall.classList.remove('hidden');
+        });
+        window.addEventListener('appinstalled', () => {
+            deferredPrompt = null;
+            btnInstall.classList.add('hidden');
+        });
+
+        btnInstall.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                try {
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') btnInstall.classList.add('hidden');
+                } catch (e) {}
+                deferredPrompt = null;
+            } else {
+                abrirInstallModal();
+            }
+        });
+
+        function abrirInstallModal() {
+            const body = document.getElementById('installHelpBody');
+            const ua = navigator.userAgent || '';
+            const isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                body.innerHTML = 'Para instalar no iPhone/iPad, use o <b>Safari</b>:'
+                    + '<ol><li>Toque no botão <b>Compartilhar</b> (ícone de caixa com seta ↑).</li>'
+                    + '<li>Escolha <b>Adicionar à Tela de Início</b>.</li>'
+                    + '<li>Confirme em <b>Adicionar</b>.</li></ol>';
+            } else {
+                body.innerHTML = 'Para instalar no celular (Android/Chrome):'
+                    + '<ol><li>Abra o menu <b>⋮</b> do navegador.</li>'
+                    + '<li>Toque em <b>Instalar aplicativo</b> ou <b>Adicionar à tela inicial</b>.</li>'
+                    + '<li>Confirme a instalação.</li></ol>';
+            }
+            document.getElementById('installModal').classList.remove('hidden');
+        }
+        function fecharInstallModal() {
+            document.getElementById('installModal').classList.add('hidden');
+        }
+        document.getElementById('installModal').addEventListener('click', (e) => {
+            if (e.target.id === 'installModal') fecharInstallModal();
+        });
 
         // ===================================================================
         // REGISTRO DO SERVICE WORKER (transforma a página em app instalável)
