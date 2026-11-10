@@ -7,7 +7,7 @@
 
     <!-- ===== Configuração do App (PWA) ===== -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0c353b">
+    <meta name="theme-color" content="#1b4264">
     <meta name="description" content="Registro de pedidos retirados na expedição da Belt Correias.">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -21,22 +21,25 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg:#eceff1;
+            /* ===== Paleta Belt Correias ===== */
+            --bg:#eef2f7;
             --surface:#ffffff;
-            --surface-2:#f6f8f9;
-            --ink:#16191c;
-            --ink-2:#586066;
-            --ink-3:#8a939a;
-            --line:#dde3e6;
-            --line-2:#c9d2d6;
-            --bar:#0c353b;
-            --brand:#0d5b63;
-            --brand-2:#0a474d;
-            --brand-tint:#e2efef;
+            --surface-2:#f4f8fc;
+            --ink:#1b2a3f;
+            --ink-2:#4a5a70;
+            --ink-3:#8795a6;
+            --line:#dde5ee;
+            --line-2:#c6d2e0;
+            --bar:#1b4264;          /* azul-marinho da marca (barra) */
+            --brand:#046bd2;        /* azul de ação (botões) */
+            --brand-2:#045cb4;      /* azul mais escuro (hover) */
+            --brand-tint:#e4effb;   /* azul bem claro (fundos/realce) */
+            --accent:#00adee;       /* ciano da marca (destaques) */
+            --accent-2:#00c7e4;
             --amber:#b57f00;
             --amber-text:#854d0e;
             --amber-tint:#fef6dd;
@@ -44,12 +47,12 @@
             --red-tint:#fbe6e3;
             --green:#1a9455;
             --green-tint:#e2f3ea;
-            --shadow-sm:0 1px 2px rgba(16,25,30,.08);
-            --shadow-md:0 10px 30px rgba(12,42,48,.14);
+            --shadow-sm:0 1px 2px rgba(20,40,70,.08);
+            --shadow-md:0 10px 30px rgba(21,45,80,.14);
             --r:14px;
             --r-sm:9px;
             --sans:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-            --num:'Space Grotesk','IBM Plex Sans',system-ui,sans-serif;
+            --num:'Barlow Condensed','IBM Plex Sans',system-ui,sans-serif;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -76,7 +79,7 @@
             top: 0;
             z-index: 40;
             background: var(--bar);
-            color: #eaf6f5;
+            color: #eaf3fb;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -89,10 +92,10 @@
         .tb-title {
             font-family: var(--num);
             font-weight: 600;
-            font-size: 15px;
+            font-size: 17px;
             letter-spacing: .01em;
             white-space: nowrap;
-            line-height: 1.1;
+            line-height: 1.05;
             min-width: 0;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -102,7 +105,7 @@
             font-family: var(--sans);
             font-weight: 400;
             font-size: 11px;
-            color: #9ccbc7;
+            color: #9cc6e8;
             letter-spacing: 0;
         }
         .tb-spacer { flex: 1; }
@@ -115,9 +118,9 @@
             font-size: 11px;
             font-weight: 600;
             letter-spacing: .03em;
-            color: #bfe9e4;
-            background: rgba(127,212,208,.12);
-            border: 1px solid rgba(127,212,208,.34);
+            color: #a9def7;
+            background: rgba(0,173,238,.14);
+            border: 1px solid rgba(0,173,238,.40);
             padding: 5px 10px 5px 8px;
             border-radius: 999px;
             white-space: nowrap;
@@ -154,7 +157,7 @@
         .tb-btn:hover { background: rgba(255,255,255,.2); }
 
         /* ===== CONTEÚDO ===== */
-        main { flex: 1; width: 100%; max-width: 480px; margin: 0 auto; padding: 28px 18px 48px; }
+        main { flex: 1; width: 100%; max-width: 480px; margin: 0 auto; padding: 24px 18px 48px; }
 
         .card {
             background-color: var(--surface);
@@ -176,9 +179,10 @@
         .card h1 {
             font-family: var(--num);
             font-weight: 600;
-            font-size: 23px;
+            font-size: 27px;
             margin: 0 0 4px;
             color: var(--ink);
+            letter-spacing: .005em;
         }
         .card .sub { margin: 0 0 24px; color: var(--ink-2); font-size: 14px; }
 
@@ -204,7 +208,7 @@
         .control:focus {
             border-color: var(--brand);
             background-color: var(--surface);
-            box-shadow: 0 0 0 3px rgba(13,91,99,.14);
+            box-shadow: 0 0 0 3px rgba(4,107,210,.16);
         }
         .control:focus + .lead-ico, .control-wrap:focus-within .lead-ico { color: var(--brand); }
         .control::placeholder { color: var(--ink-3); }
@@ -226,7 +230,7 @@
         #btnText { display: inline-flex; align-items: center; gap: 9px; }
         .btn-primary { background: var(--brand); color: #fff; }
         .btn-primary:hover { background: var(--brand-2); }
-        .btn-primary:disabled { background: #9fb4b6; cursor: not-allowed; }
+        .btn-primary:disabled { background: #9db6cf; cursor: not-allowed; }
         .btn-ghost {
             margin-top: 12px;
             background: var(--surface);
@@ -252,6 +256,7 @@
         .status-msg .ico { width: 18px; height: 18px; }
         .status-msg.success { display: flex; background-color: var(--green-tint); color: #157347; border: 1px solid rgba(26,148,85,.4); }
         .status-msg.error { display: flex; background-color: var(--red-tint); color: #b32c20; border: 1px solid rgba(207,58,44,.4); }
+        .status-msg.warn { display: flex; background-color: var(--amber-tint); color: var(--amber-text); border: 1px solid rgba(181,127,0,.4); }
 
         .spinner {
             width: 18px; height: 18px;
@@ -263,12 +268,60 @@
         }
         @keyframes rotation { to { transform: rotate(360deg); } }
 
+        /* ===== Painéis (fila offline + histórico) ===== */
+        .stack { margin-top: 16px; display: flex; flex-direction: column; gap: 14px; }
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--r);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+        .panel-head {
+            display: flex; align-items: center; gap: 9px;
+            padding: 13px 16px;
+            font-family: var(--num); font-weight: 600; font-size: 16px;
+            color: var(--ink);
+        }
+        .panel-head .ico { width: 18px; height: 18px; }
+        .panel.fila .panel-head .ico { color: var(--amber); }
+        .panel.hist .panel-head .ico { color: var(--brand); }
+        .panel-head .count {
+            margin-left: auto;
+            font-family: var(--sans); font-size: 12px; font-weight: 600;
+            padding: 3px 10px; border-radius: 999px;
+        }
+        .count.amber { background: var(--amber-tint); color: var(--amber-text); }
+        .count.blue { background: var(--brand-tint); color: var(--brand); }
+
+        .rows { list-style: none; }
+        .row {
+            display: flex; align-items: center; gap: 11px;
+            padding: 11px 16px;
+            border-top: 1px solid var(--line);
+            font-size: 14px;
+        }
+        .row .st { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; flex: 0 0 auto; }
+        .st.ok { background: var(--green-tint); color: #157347; }
+        .st.wait { background: var(--amber-tint); color: var(--amber-text); }
+        .st .ico { width: 14px; height: 14px; vertical-align: 0; }
+        .row .num { font-family: var(--num); font-weight: 600; font-size: 17px; color: var(--ink); letter-spacing: .01em; }
+        .row .time { margin-left: auto; font-size: 12.5px; color: var(--ink-3); white-space: nowrap; }
+
+        @media (max-width: 560px) { .tb-title small { display: none; } }
+        @media (max-width: 430px) {
+            .topbar { gap: 8px; padding: 0 12px; }
+            .tb-btn span.lbl { display: none; }
+            .tb-btn { padding: 8px; }
+            .badge-online { font-size: 10px; padding: 5px 8px 5px 7px; letter-spacing: .02em; }
+        }
+
         /* ===== Leitor de código de barras (modal) ===== */
         .scanner-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(9,28,32,.55);
+            background: rgba(10,26,45,.55);
             backdrop-filter: blur(2px);
             z-index: 80;
             justify-content: center;
@@ -290,7 +343,7 @@
         }
         .scanner-header h2 {
             display: inline-flex; align-items: center; gap: 9px;
-            font-family: var(--num); font-size: 17px; color: var(--ink); font-weight: 600;
+            font-family: var(--num); font-size: 19px; color: var(--ink); font-weight: 600;
         }
         .scanner-header h2 .ico { width: 19px; height: 19px; color: var(--brand); }
         .btn-close {
@@ -302,7 +355,7 @@
         .btn-close:hover { color: var(--ink); background: var(--line); }
         .btn-close .ico { width: 18px; height: 18px; vertical-align: 0; }
         .scanner-body { padding: 20px; }
-        #reader { width: 100%; border-radius: var(--r-sm); overflow: hidden; background-color: #0b1417; min-height: 240px; border: 1px solid var(--line-2); }
+        #reader { width: 100%; border-radius: var(--r-sm); overflow: hidden; background-color: #0b1a2b; min-height: 240px; border: 1px solid var(--line-2); }
         #reader video { width: 100% !important; border-radius: var(--r-sm); }
         .scanner-hint { text-align: center; font-size: 13px; color: var(--ink-2); margin: 16px 0; }
         .btn-cancel { background-color: var(--surface-2); color: var(--ink); border: 1px solid var(--line-2); }
@@ -311,27 +364,18 @@
         /* ===== Modal de instalação (fallback iOS) ===== */
         .modal-overlay {
             position: fixed; inset: 0;
-            background: rgba(9,28,32,.55); backdrop-filter: blur(2px);
+            background: rgba(10,26,45,.55); backdrop-filter: blur(2px);
             z-index: 90; display: flex; align-items: center; justify-content: center; padding: 16px;
         }
         .modal { background: var(--surface); width: 100%; max-width: 400px; border-radius: var(--r); box-shadow: var(--shadow-md); overflow: hidden; }
         .modal-head { display: flex; align-items: center; gap: 10px; padding: 18px 20px; border-bottom: 1px solid var(--line); }
         .modal-head .m-ico { width: 36px; height: 36px; flex: 0 0 auto; display: grid; place-items: center; background: var(--brand-tint); color: var(--brand); border-radius: 9px; }
-        .modal-head h3 { margin: 0; font-family: var(--num); font-weight: 600; font-size: 16px; }
+        .modal-head h3 { margin: 0; font-family: var(--num); font-weight: 600; font-size: 18px; }
         .modal-body { padding: 18px 20px; font-size: .9rem; color: var(--ink-2); line-height: 1.5; }
         .modal-body ol { margin: 10px 0 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; }
         .modal-body b { color: var(--ink); }
         .modal-foot { display: flex; justify-content: flex-end; padding: 14px 20px; border-top: 1px solid var(--line); }
         .modal-foot .btn { width: auto; padding: 10px 20px; }
-
-        @media (max-width: 560px) { .tb-title small { display: none; } }
-        @media (max-width: 430px) {
-            .topbar { gap: 8px; padding: 0 12px; }
-            .tb-btn span.lbl { display: none; }
-            .tb-btn { padding: 8px; }
-            .tb-title { font-size: 15px; }
-            .badge-online { font-size: 10px; padding: 5px 8px 5px 7px; letter-spacing: .02em; }
-        }
     </style>
 </head>
 <body>
@@ -339,12 +383,12 @@
     <header class="topbar">
         <div class="tb-brand">
             <svg class="tb-mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-                <rect width="64" height="64" rx="15" fill="#0a474d"/>
-                <g stroke="#7fd4d0" stroke-width="3.4" fill="none">
+                <rect width="64" height="64" rx="15" fill="#0f3252"/>
+                <g stroke="#4cc6ef" stroke-width="3.4" fill="none">
                     <circle cx="25" cy="33" r="12.5"/>
                     <circle cx="46" cy="33" r="7.5"/>
                 </g>
-                <path d="M25 20.5 H46" stroke="#cfeeea" stroke-width="3.4" stroke-linecap="round"/>
+                <path d="M25 20.5 H46" stroke="#d4f0fb" stroke-width="3.4" stroke-linecap="round"/>
             </svg>
             <div class="tb-title">Registro de Retirada<small>Belt Correias</small></div>
         </div>
@@ -398,6 +442,28 @@
 
             <div id="statusMsg" class="status-msg"></div>
         </div>
+
+        <div class="stack">
+            <!-- Fila: pedidos aguardando envio (quando sem conexão / falha) -->
+            <section id="filaCard" class="panel fila hidden">
+                <div class="panel-head">
+                    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>
+                    Aguardando envio
+                    <span class="count amber" id="filaCount">0</span>
+                </div>
+                <ul class="rows" id="filaRows"></ul>
+            </section>
+
+            <!-- Histórico dos últimos registros confirmados -->
+            <section id="histCard" class="panel hist hidden">
+                <div class="panel-head">
+                    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
+                    Últimos registros
+                    <span class="count blue" id="histCount">0</span>
+                </div>
+                <ul class="rows" id="histRows"></ul>
+            </section>
+        </div>
     </main>
 
     <!-- Tela do leitor de código de barras -->
@@ -440,14 +506,29 @@
     <script src="./html5-qrcode.min.js"></script>
 
     <script>
+        // ===================================================================
+        // CONFIGURAÇÃO
+        // ===================================================================
         // URL DO GOOGLE APPS SCRIPT
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9a_KCboE6rlylIU3hC9oKyHUt86KVXhZWM1oOsvKiRru-iSMswJBVKxPmjVs4WfpW/exec';
+
+        // Chave compartilhada: PRECISA SER IGUAL à do Apps Script (campo CHAVE_SECRETA).
+        // Serve como uma trava simples para evitar gravações indevidas na planilha.
+        const CHAVE = 'belt-exp-7Q2';
+
+        // Chaves de armazenamento local (fila e histórico ficam no próprio celular)
+        const LS_FILA = 'retirada_fila_v1';
+        const LS_HIST = 'retirada_hist_v1';
+        const MAX_HIST = 50;
 
         /* ===== Ícones SVG usados no JS ===== */
         const ICO = {
             save: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.8L15.2 3Z"/><path d="M17 21v-7H7v7"/><path d="M7 3v5h7"/></svg>',
-            ok: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="m8.5 11.5 3 3L22 4.5"/></svg>',
-            err: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg>'
+            ok:   '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="m8.5 11.5 3 3L22 4.5"/></svg>',
+            err:  '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4.5"/><path d="M12 16h.01"/></svg>',
+            warn: '<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+            check:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+            clock:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
         };
 
         const form = document.getElementById('orderForm');
@@ -458,65 +539,197 @@
 
         btnText.innerHTML = ICO.save + '<span>Registrar</span>';
 
-        // Impede a digitação e colagem de caracteres que não sejam números
-        inputPedido.addEventListener('input', function() {
+        // ===================================================================
+        // ARMAZENAMENTO LOCAL (fila + histórico)
+        // ===================================================================
+        function carregar(chave) {
+            try { return JSON.parse(localStorage.getItem(chave)) || []; }
+            catch (e) { return []; }
+        }
+        function salvar(chave, valor) {
+            try { localStorage.setItem(chave, JSON.stringify(valor)); } catch (e) {}
+        }
+
+        let fila = carregar(LS_FILA);        // [{ pedido, ts }] aguardando envio
+        let historico = carregar(LS_HIST);   // [{ pedido, ts }] já confirmados
+        let enviandoFila = false;
+
+        function horaBR(iso) {
+            try {
+                return new Date(iso).toLocaleString('pt-BR', {
+                    day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+                });
+            } catch (e) { return ''; }
+        }
+
+        // Verifica se o pedido já foi registrado HOJE neste aparelho (histórico ou fila)
+        function jaRegistradoHoje(pedido) {
+            const hoje = new Date().toDateString();
+            const naHist = historico.some(it => it.pedido === pedido && new Date(it.ts).toDateString() === hoje);
+            const naFila = fila.some(it => it.pedido === pedido);
+            return naHist || naFila;
+        }
+
+        // ===================================================================
+        // ENVIO
+        // ===================================================================
+        inputPedido.addEventListener('input', function () {
             this.value = this.value.replace(/\D/g, '');
         });
 
-        form.addEventListener('submit', async function(e) {
+        form.addEventListener('submit', async function (e) {
             e.preventDefault();
-
             const pedido = inputPedido.value.trim();
             if (!pedido) return;
 
+            if (jaRegistradoHoje(pedido)) {
+                const ok = confirm('O pedido ' + pedido + ' já foi registrado hoje neste aparelho.\n\nRegistrar mesmo assim?');
+                if (!ok) return;
+            }
+            registrarPedido(pedido);
+        });
+
+        // Decide: envia agora (online) ou guarda na fila (offline/falha)
+        async function registrarPedido(pedido) {
+            const item = { pedido: pedido, ts: new Date().toISOString() };
+
+            if (!navigator.onLine) {
+                fila.push(item);
+                salvar(LS_FILA, fila);
+                renderFila();
+                limparInput();
+                showStatus('Sem conexão agora. Pedido ' + pedido + ' salvo na fila — será enviado sozinho ao reconectar.', 'warn');
+                return;
+            }
+
             setLoading(true);
             hideStatus();
+            const sucesso = await enviar(item);
+            setLoading(false);
 
+            if (sucesso) {
+                historico.unshift(item);
+                historico = historico.slice(0, MAX_HIST);
+                salvar(LS_HIST, historico);
+                renderHist();
+                limparInput();
+                showStatus('Pedido ' + pedido + ' registrado com sucesso!', 'success');
+            } else {
+                fila.push(item);
+                salvar(LS_FILA, fila);
+                renderFila();
+                limparInput();
+                showStatus('Falha ao enviar. Pedido ' + pedido + ' salvo na fila e será reenviado automaticamente.', 'warn');
+            }
+        }
+
+        // Faz o POST de um item. Retorna true (sucesso) ou false (falha).
+        async function enviar(item) {
             try {
-                const response = await fetch(SCRIPT_URL, {
+                const resp = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ numeroPedido: pedido })
+                    body: JSON.stringify({ numeroPedido: item.pedido, chave: CHAVE, ts: item.ts })
                 });
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    showStatus('Pedido registrado com sucesso!', 'success');
-                    inputPedido.value = '';
-                    inputPedido.focus();
-                } else {
-                    showStatus('Erro ao registrar: ' + (result.message || 'Tente novamente.'), 'error');
-                }
+                const result = await resp.json();
+                return result.status === 'success';
             } catch (error) {
-                console.error('Erro:', error);
-                showStatus('Erro de conexão ou URL inválida.', 'error');
-            } finally {
-                setLoading(false);
+                console.error('Erro ao enviar:', error);
+                return false;
             }
-        });
+        }
+
+        // Tenta esvaziar a fila (um por vez, na ordem). Para na primeira falha.
+        async function flushFila() {
+            if (enviandoFila || !navigator.onLine || fila.length === 0) return;
+            enviandoFila = true;
+            renderFila();
+
+            while (fila.length > 0 && navigator.onLine) {
+                const item = fila[0];
+                const sucesso = await enviar(item);
+                if (sucesso) {
+                    fila.shift();
+                    salvar(LS_FILA, fila);
+                    historico.unshift(item);
+                    historico = historico.slice(0, MAX_HIST);
+                    salvar(LS_HIST, historico);
+                    renderFila();
+                    renderHist();
+                } else {
+                    break; // sem conexão de novo — tenta mais tarde
+                }
+            }
+
+            enviandoFila = false;
+            renderFila();
+        }
 
         function setLoading(isLoading) {
             btnRegistrar.disabled = isLoading;
-            if (isLoading) {
-                btnText.innerHTML = '<span class="spinner"></span><span>Registrando…</span>';
-            } else {
-                btnText.innerHTML = ICO.save + '<span>Registrar</span>';
-            }
+            btnText.innerHTML = isLoading
+                ? '<span class="spinner"></span><span>Registrando…</span>'
+                : ICO.save + '<span>Registrar</span>';
+        }
+
+        function limparInput() {
+            inputPedido.value = '';
+            inputPedido.focus();
         }
 
         function showStatus(message, type) {
-            statusMsg.innerHTML = (ICO[type === 'success' ? 'ok' : 'err']) + '<span>' + message + '</span>';
+            const mapa = { success: 'ok', error: 'err', warn: 'warn' };
+            statusMsg.innerHTML = ICO[mapa[type] || 'err'] + '<span>' + message + '</span>';
             statusMsg.className = 'status-msg ' + type;
         }
-
         function hideStatus() {
             statusMsg.style.display = 'none';
             statusMsg.className = 'status-msg';
             statusMsg.innerHTML = '';
         }
 
-        // ===== Status de conexão (online/offline) =====
+        // ===================================================================
+        // RENDERIZAÇÃO DOS PAINÉIS
+        // ===================================================================
+        function renderFila() {
+            const card = document.getElementById('filaCard');
+            const rows = document.getElementById('filaRows');
+            const cnt = document.getElementById('filaCount');
+
+            if (fila.length === 0) { card.classList.add('hidden'); rows.innerHTML = ''; return; }
+            card.classList.remove('hidden');
+            cnt.textContent = enviandoFila ? 'enviando…' : (fila.length + (fila.length === 1 ? ' pedido' : ' pedidos'));
+
+            rows.innerHTML = fila.map(function (it) {
+                return '<li class="row">'
+                    + '<span class="st wait">' + ICO.clock + '</span>'
+                    + '<span class="num">' + it.pedido + '</span>'
+                    + '<span class="time">' + horaBR(it.ts) + '</span>'
+                    + '</li>';
+            }).join('');
+        }
+
+        function renderHist() {
+            const card = document.getElementById('histCard');
+            const rows = document.getElementById('histRows');
+            const cnt = document.getElementById('histCount');
+
+            if (historico.length === 0) { card.classList.add('hidden'); rows.innerHTML = ''; return; }
+            card.classList.remove('hidden');
+            cnt.textContent = historico.length;
+
+            rows.innerHTML = historico.map(function (it) {
+                return '<li class="row">'
+                    + '<span class="st ok">' + ICO.check + '</span>'
+                    + '<span class="num">' + it.pedido + '</span>'
+                    + '<span class="time">' + horaBR(it.ts) + '</span>'
+                    + '</li>';
+            }).join('');
+        }
+
+        // ===================================================================
+        // STATUS DE CONEXÃO (online/offline)
+        // ===================================================================
         function atualizarStatusConexao() {
             const badge = document.getElementById('statusBadge');
             const txt = document.getElementById('statusText');
@@ -528,9 +741,8 @@
                 txt.innerText = 'SEM CONEXÃO';
             }
         }
-        window.addEventListener('online', atualizarStatusConexao);
+        window.addEventListener('online', function () { atualizarStatusConexao(); flushFila(); });
         window.addEventListener('offline', atualizarStatusConexao);
-        atualizarStatusConexao();
 
         // ===================================================================
         // LEITOR DE CÓDIGO DE BARRAS (CÂMERA DO CELULAR)
@@ -598,10 +810,7 @@
                     function () { /* ignora falhas de leitura quadro a quadro */ }
                 );
                 scannerAtivo = true;
-
-                if (scannerCancelado) {
-                    await pararScanner();
-                }
+                if (scannerCancelado) { await pararScanner(); }
             } catch (err) {
                 console.error('Erro ao iniciar a câmera:', err);
                 scannerOverlay.classList.remove('active');
@@ -735,6 +944,16 @@
                     .catch(function (err) { console.log('Service worker não registrado:', err); });
             });
         }
+
+        // ===================================================================
+        // INICIALIZAÇÃO
+        // ===================================================================
+        atualizarStatusConexao();
+        renderFila();
+        renderHist();
+        flushFila();                                   // tenta enviar pendências ao abrir
+        setInterval(function () { if (fila.length > 0) flushFila(); }, 20000);  // e a cada 20s
+        inputPedido.focus();
     </script>
 </body>
 </html>

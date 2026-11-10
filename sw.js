@@ -2,7 +2,7 @@
 // Guarda os arquivos do app para abrir mesmo sem internet.
 // O envio do pedido (POST para o Google) SEMPRE vai pela rede.
 
-const CACHE = 'retirada-v2';
+const CACHE = 'retirada-v3';
 
 const ARQUIVOS = [
   './',

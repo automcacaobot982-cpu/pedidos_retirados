@@ -1,0 +1,64 @@
+// ============================================================================
+//  Apps Script do app "Registro de Retirada" - Belt Correias
+//  Cole este código no editor de Apps Script da planilha e reimplante
+//  (Implantar > Gerenciar implantações > editar > Nova versão).
+// ============================================================================
+
+function doPost(e) {
+  try {
+    // ----- Configuração -----
+    // A chave abaixo PRECISA ser igual à constante CHAVE do index.html.
+    // Para desligar a trava, deixe CHAVE_SECRETA = "" (string vazia).
+    var CHAVE_SECRETA = "belt-exp-7Q2";
+
+    var SPREADSHEET_ID = "1xFwKnV55LG-qfS-igCI1qR3MqoWvOKThXrZ0r69k-8w";
+
+    // Nome exato da aba onde gravar. Deixe "" para usar a primeira aba.
+    var NOME_ABA = "";
+
+    // ----- Lê o que o app enviou -----
+    var dados = JSON.parse(e.postData.contents);
+
+    // ----- Trava de segurança (chave) -----
+    if (CHAVE_SECRETA && dados.chave !== CHAVE_SECRETA) {
+      return json({ status: "error", message: "Acesso nao autorizado." });
+    }
+
+    // ----- Valida o número do pedido -----
+    var numeroPedido = (dados.numeroPedido == null ? "" : String(dados.numeroPedido)).trim();
+    if (!numeroPedido) {
+      return json({ status: "error", message: "Numero do pedido vazio." });
+    }
+
+    // ----- Seleciona a planilha/aba -----
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = NOME_ABA ? ss.getSheetByName(NOME_ABA) : ss.getSheets()[0];
+    if (!sheet) {
+      return json({ status: "error", message: "Aba nao encontrada." });
+    }
+
+    // ----- Data/hora: usa o horário REAL da retirada (enviado pelo app),
+    //        importante para pedidos que ficaram na fila offline.
+    //        Se não vier, usa o horário do servidor. -----
+    var quando = new Date();
+    if (dados.ts) {
+      var d = new Date(dados.ts);
+      if (!isNaN(d.getTime())) { quando = d; }
+    }
+    var dataHora = Utilities.formatDate(quando, "America/Sao_Paulo", "dd/MM/yyyy HH:mm:ss");
+
+    // ----- Grava: Coluna A = pedido, Coluna B = data/hora -----
+    sheet.appendRow([numeroPedido, dataHora]);
+
+    return json({ status: "success", message: "Pedido e data registrados com sucesso!" });
+
+  } catch (error) {
+    return json({ status: "error", message: error.toString() });
+  }
+}
+
+function json(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
